@@ -1,104 +1,88 @@
-const { request, response } = require('express')
 const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors') // accest cors policy
-
 const app = express()
+const cors = require('cors')
 
-
-app.use(cors()) // cors policy
-app.use(express.static('build'))  // accest to front-end
+app.use(cors())
 app.use(express.json())
-// https://github.com/expressjs/morgan#creating-new-tokens
-// Define a custom token for request body data
-morgan.token('body', (request) => JSON.stringify(request.body));
 
-app.use(morgan(':method :url :status :response-time ms - :body'));
+app.use(express.static('build'))
 
-let persons = [
-  { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": 4,  
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-]
+const Note = require('./models/note')
 
-app.get('/api/persons', (request, response) => {
-  response.send(persons)
-})
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  //console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+app.use(requestLogger)
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/info', (request, response) => {
-  //response.send(persons)
-  const date = new Date()
-  let day = date.toLocaleString('en-us', { weekday: 'long' });
-  let month = date.toLocaleString('en-us', { month: 'long' });
-  response.send(
-  `<p>Phonebook has information for ${persons.length} people</p> 
-  <p> ${date} </p>`
-  )
-  console.log(date)
+app.get('/api/notes', (request, response) => {
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
-const generatedID = () => {
-  return Math.floor(Math.random() * 1000) + 1;
+const generateId = () => {
+  const maxId = notes.length > 0
+    ? Math.max(...notes.map(n => n.id))
+    : 0
+  return maxId + 1
 }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/notes', (request, response) => {
   const body = request.body
-  const checkName = persons.find(person => person.name === body.name)
-  //console.log(checkName)
-  if(!body.name || !body.number || checkName){
-    return response.status(400).json({
-      error: 'name must be unique'
+
+  if (!body.content) {
+    return response.status(400).json({ 
+      error: 'content missing' 
     })
   }
-  const person = {
-    id: generatedID(),
-    name: body.name,
-    number: body.number
+
+  const note = {
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+    id: generateId(),
   }
-  persons = persons.concat(person)
-  response.json(person)
+
+  notes = notes.concat(note)
+
+  response.json(note)
 })
 
-app.get('/info/persons/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
-  const person = persons.find(note => note.id === id)
-  if(person) {
-    response.json(person)
+  const note = notes.find(note => note.id === id)
+
+  if (note) {
+    response.json(note)
   } else {
     response.status(404).end()
   }
+
+  response.json(note)
 })
 
-app.delete('/info/persons/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+  notes = notes.filter(note => note.id !== id)
 
   response.status(204).end()
 })
 
-const PORT = 3001
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
