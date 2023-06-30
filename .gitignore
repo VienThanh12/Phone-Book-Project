@@ -1,0 +1,9 @@
+# dependencies
+/node_modules
+
+# production
+/build
+
+# Local development
+.DS_Store
+.env

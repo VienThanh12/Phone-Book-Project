@@ -1,86 +1,107 @@
+const { request, response } = require('express')
 const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors') // accest cors policy
+
 const app = express()
-const cors = require('cors')
 
-app.use(cors())
+app.use(cors()) // cors policy
+app.use(express.static('build'))  // accest to front-end
 app.use(express.json())
+// https://github.com/expressjs/morgan#creating-new-tokens
+// Define a custom token for request body data
+morgan.token('body', (request) => JSON.stringify(request.body));
+app.use(morgan(':method :url :status :response-time ms - :body'));
 
-app.use(express.static('build'))
+const Person = require('./models/person')
+const { useState } = require('react')
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
-const Note = require('./models/note')
-
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  //console.log('Body:  ', request.body)
-  console.log('---')
-  next()
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message})
+  }
+  console.log(error.name)
 }
-app.use(requestLogger)
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
-})
-
-app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
+app.get('/api/persons', (request, response) =>{
+  Person.find({}).then(persons => {
+    response.json(persons)
   })
 })
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
+app.get('/info', (request, response) => {
 
-app.post('/api/notes', (request, response) => {
+  const date = new Date()
+  let day = date.toLocaleString('en-us', { weekday: 'long' })
+  let month = date.toLocaleString('en-us', { month: 'long' })
+  Person.find({}).then(persons => {
+    response.send(
+      `<p>Phonebook has information for ${ persons.length} people</p> 
+      <p> ${date} </p>`
+      )
+  })
+  console.log(date)
+})
+
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
-
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
+  if(body.name === undefined || body.number === undefined){
+    return response.status(400).json({
+      error: 'name must be unique'
     })
   }
-
-  const note = {
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-    id: generateId(),
-  }
-
-  notes = notes.concat(note)
-
-  response.json(note)
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })  
+  person.save()
+    .then(savedPerson => {
+    response.json(savedPerson)
+    })
+    .catch(error => next(error))
 })
 
-app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
-
-  response.json(note)
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+  .then(person => {
+    // console.log(person)
+    if(person){
+      response.json(person)
+    }
+    else{
+      response.status(404).end()
+    }
+  })
+  .catch(error => next(error))  
 })
 
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
 
-  response.status(204).end()
+  Person.findByIdAndUpdate(
+    request.params.id, 
+    {name, number},  
+    { new: true, runValidators: true, context: 'query' }
+    )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
-app.use(unknownEndpoint)
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+  .then(result =>{
+    response.status(204).end()
+  })
+  .catch(error => next(error))
+})
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
