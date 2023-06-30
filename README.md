@@ -23,7 +23,7 @@ And remember that the phone number needs to be in this format DDD-DDDDDDD or DD-
 * If you need to update the details of an existing contact, you write the same name and a different number. Clicking the button should change the number of contact.
 
 **5. Delete a Contact:**
-* To remove a contact from the phonebook, find a "Delete"  button or link associated with the contact you wish to delete. Clicking on this option should prompt a confirmation dialogue to ensure you want to proceed with the deletion. Confirm the deletion, and the contact should be removed from the phonebook.
+* To remove a contact from the phonebook, find a "Delete"  button or link associated with the contact you wish to delete. Clicking on this option should prompt a confirmation dialogue to ensure you want to proceed with the deletion. Confirm the deletion and the contact should be removed from the phonebook.
 
 **6. Search and Filter Contacts:**
 * If the phonebook application supports search or filtering functionality, look for a search bar or filter options. You can enter search terms or select specific criteria to narrow down the displayed contacts based on your requirements.
