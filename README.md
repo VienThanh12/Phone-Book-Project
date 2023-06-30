@@ -2,8 +2,10 @@
 ## Link to Website
 ### [Phone-Book](https://phone-book-j06k.onrender.com/)
 > You can view the website by clicking this link
+
 ![Screenshot 2023-06-30 at 17 32 08](https://github.com/VienThanh12/Phone-Book-Project/assets/67015555/f0c15f14-928a-41d9-bde2-a30665301bff)
 
+**Note:** Remember that because I use a free account in [Render.com](https://render.com/). so it will spin down with inactivity. If you can not see it, I don't activate the web yet
 # Description of Project
 A phonebook to save the name and number of a person 
 
