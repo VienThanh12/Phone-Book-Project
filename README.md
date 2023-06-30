@@ -43,4 +43,4 @@ And remember that the phone number needs to be in this format DDD-DDDDDDD or DD-
 ### Database:
 - MongoDB and Mongoose
   
-> I also used **render.com** to deploy the app to the internet and **MongoDB Atlas** to save the data.
+> I also used **Render** to deploy the app to the internet and **MongoDB Atlas** to save the data.
