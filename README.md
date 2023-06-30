@@ -1,10 +1,9 @@
 # Phone-Book-Project
-A phonebook to save the name and number of a person.
 
-# Link to Website
+## Link to Website
 ### [Phone-Book](https://phone-book-j06k.onrender.com/)
 > You can view the website by clicking this link
-<img width="720" alt="Screenshot 2023-06-30 at 16 57 07" src="https://github.com/VienThanh12/Phone-Book-Project/assets/67015555/25feced9-3973-4087-94f7-2d5843d43369">
+![Screenshot 2023-06-30 at 17 32 08](https://github.com/VienThanh12/Phone-Book-Project/assets/67015555/f0c15f14-928a-41d9-bde2-a30665301bff)
 
 # Description of Project
 A phonebook to save the name and number of a person 
