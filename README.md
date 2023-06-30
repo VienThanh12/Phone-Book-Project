@@ -10,11 +10,12 @@ A phonebook to save the name and number of a person.
 # Description of Project
 A phonebook to save the name and number of a person 
 
-1. Access the Phonebook Application:
-
-You  visit [https://phone-book-j06k.onrender.com/](https://phone-book-j06k.onrender.com/) .
-
-2. View Existing Contacts:
+**1. Access the Phonebook Application:**
+* You  visit [https://phone-book-j06k.onrender.com/](https://phone-book-j06k.onrender.com/).
+  
+**2. View Existing Contacts:**
+* Upon accessing the phonebook application, you are able to view a list of existing contacts if any have been added.
+3. View Existing Contacts:
 Upon accessing the phonebook application, you should be able to view a list of existing contacts if any have been added. The contacts may be displayed in a table or a list, showing relevant information such as names, phone numbers, or email addresses.
 
 Add a Contact:
