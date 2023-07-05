@@ -38,11 +38,12 @@ And remember that the phone number needs to be in this format DDD-DDDDDDD or DD-
   - ReactJs
 ### Back-End:
 - Language:
-  - Javascript 
+  - Javascript
+  - Node.js
 - Framework:
-    - Node.js 
-    - Express 
+    - Express.js
+    - Mongoose
 ### Database:
-- MongoDB and Mongoose
+- MongoDB 
   
 > I also used **Render** to deploy the app to the internet and **MongoDB Atlas** to save the data.
