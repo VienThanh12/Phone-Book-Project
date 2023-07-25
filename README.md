@@ -7,7 +7,7 @@
 
 **Note:** Remember that because I use a free account in [Render.com](https://render.com/). so it will spin down with inactivity. If you can not see it, I don't activate the web yet. Sorry for this inconvenience.
 ## Link to the repository of PhoneBook Front-End 
-[FrontEnd Repository](https://github.com/VienThanh12/Phone-Book-FrontEnd)
+[Frontend Repository](https://github.com/VienThanh12/Phone-Book-FrontEnd)
 # Description of Project
 A phonebook to save the name and number of a person 
 
